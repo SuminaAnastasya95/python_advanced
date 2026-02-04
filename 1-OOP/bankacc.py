@@ -55,6 +55,7 @@ class BankAccount:
 acc1 = BankAccount("Boba", "101", 1000)
 acc2 = BankAccount("Bibis", "102", 500)
 
+
 print(acc1.deposit(500))         # Пополнение
 print(acc1.transfer_to('otheraccount', 300))  # Перевод от Boba к Bibis
 print(acc1.info())               # Баланс 1200
