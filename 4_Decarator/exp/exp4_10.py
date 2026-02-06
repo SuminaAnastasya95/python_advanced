@@ -1,34 +1,38 @@
+# **Описание**: Создайте декоратор с параметром, который повторяет выполнение декорируемой функции указанное количество раз.
+#
+# **Входные данные**: Число повторений (целое положительное число) и функция для декорирования
+#
+# **Выходные данные**: Декорированная функция, которая выполняется заданное количество раз и возвращает результат последнего вызова
+#
+# **Ограничения**: Количество повторений должно быть положительным целым числом
+#
+# **Примеры**:
+# Input: @repeat(3) для функции print_message("Hello")
+# Output:
+# Hello
+# Hello
+# Hello
+#
+# Input: @repeat(2) для функции calculate(5, 3) которая возвращает сумму
+# Output: Функция выполняется 2 раза, возвращает 8
+
+def repeat(times):
+    # Ваш код здесь
+    pass
+
+# Тестовые функции
 
 
-from functools import wraps
+def print_message(msg):
+    print(msg)
 
 
-def limit_calls(max_calls: int):
-    def decorator(fn):
-        @wraps(fn)
-        def wrapper(self, *args, **kwargs):
-            count_atrr = f"_{fn.__name__}_count"
-            current = getattr(self, count_atrr, 0)
-            if current >= max_calls:
-                raise RuntimeError("Закончились запуски")
-            setattr(self, count_atrr, current+1)
-            print(f"[LOG] {fn.__qualname__} called {current + 1}/ {max_calls}")
-            return fn(self, *args, **kwargs)
-        return wrapper
-    return decorator
+def calculate(a, b):
+    return a + b
 
-
-class Engine:
-    """Двигатель"""
-    @limit_calls(3)
-    def start(self):
-        """Запуск"""
-        print("Двигатель запущен")
-
-
-car = Engine()
-
-car.start()
-car.start()
-car.start()
-car.start()  # <---- Ошибка Runtime Error
+# Примеры использования:
+# @repeat(3)
+# def test_func():
+#     print("Test")
+#
+# test_func()
