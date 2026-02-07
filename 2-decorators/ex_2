@@ -1,0 +1,25 @@
+def limit_args(mode: str, max_value: int):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            new_args = []
+            for arg in args:
+                if arg > max_value:
+                    if mode == "error":
+                        raise ValueError(
+                            f"Аргумент {arg} превышает максимально допустимое значение {max_value}")
+                    elif mode == "clip":
+                        new_args.append(max_value)
+                else:
+                    new_args.append(arg)
+            return func(*new_args, **kwargs)
+        return wrapper
+    return decorator
+
+
+@limit_args(max_value=10, mode="clip")
+def multiply(a, b):
+    return a * b
+
+
+print(multiply(2, 3))
+print(multiply(100, 3))

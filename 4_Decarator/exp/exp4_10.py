@@ -1,38 +1,39 @@
-# **Описание**: Создайте декоратор с параметром, который повторяет выполнение декорируемой функции указанное количество раз.
-#
-# **Входные данные**: Число повторений (целое положительное число) и функция для декорирования
-#
-# **Выходные данные**: Декорированная функция, которая выполняется заданное количество раз и возвращает результат последнего вызова
-#
-# **Ограничения**: Количество повторений должно быть положительным целым числом
-#
-# **Примеры**:
-# Input: @repeat(3) для функции print_message("Hello")
-# Output:
-# Hello
-# Hello
-# Hello
-#
-# Input: @repeat(2) для функции calculate(5, 3) которая возвращает сумму
-# Output: Функция выполняется 2 раза, возвращает 8
+class CallCounter:
+    def __init__(self):
+        # Инициализируем словарь или переменную для хранения функции и её счетчика
+        self.count = 0
+        self.func = None
 
-def repeat(times):
-    # Ваш код здесь
-    pass
+    def __call__(self, func):
+        # Метод __call__ вызывается один раз при декорировании функции
+        self.func = func
 
-# Тестовые функции
+        # Возвращаем wrapper, который будет вызываться каждый раз
+        def wrapper(*args, **kwargs):
+            self.count += 1
+            print(f"Call #{self.count}")
+            return self.func(*args, **kwargs)
+
+        return wrapper
 
 
-def print_message(msg):
-    print(msg)
+# Создаем экземпляр декоратора
+counter = CallCounter()
+
+# Применяем его к функции
 
 
-def calculate(a, b):
-    return a + b
+@counter
+def say_hello():
+    print("Hello!")
 
-# Примеры использования:
-# @repeat(3)
-# def test_func():
-#     print("Test")
-#
-# test_func()
+
+@counter
+def say_bye():
+    print("Bye!")
+
+
+# Проверка:
+say_hello()
+say_hello()
+say_bye()
