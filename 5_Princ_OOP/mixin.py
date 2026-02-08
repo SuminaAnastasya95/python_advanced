@@ -1,3 +1,12 @@
+class CreditMixin:
+    price = 0
+    long = 0
+
+    def credit(self):
+        """Рассрочка"""
+        return f"Цена с учетом рассрочки - {self.price/self.long}"
+
+
 class Course:
     """Курсы"""
 
@@ -15,23 +24,16 @@ class Course:
         return f"Название курса - {self.name}, длительность курса - {self.long}"
 
 
-class AIcourse(Course):
+class AIcourse(Course, CreditMixin):
     """Курс AI"""
-
-    def credit(self):
-        """Рассрочка"""
-        return f"Цена с учетом рассрочки - {self.price/self.long}"
+    pass
 
 
-class CourseProject(Course):
+class CourseProject(Course, CreditMixin):
 
     def __init__(self, price: float, name: str, long: int, project_name: str):
         super().__init__(price, name, long)
         self.project_name = project_name
-
-    def credit(self):
-        """Рассрочка"""
-        return f"Цена с учетом рассрочки - {self.price/self.long}"
 
     def get_project_name(self):
         return self.project_name
