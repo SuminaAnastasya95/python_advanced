@@ -29,19 +29,30 @@ class BankAccount:
             self.balance -= amount
             return f"Баланс после снятия - {float(self.balance):.2f}"
 
-    def transfer_to(self, otheraccount: str | int, amount: float):
-        if amount > self.balance:
-            return f"Сумма снятия: <{amount}> превышает баланс аккаунат: <{self.balance}>"
-        elif amount < 0:
-            return f"Сумма снятия не может быть отрицательной: <{amount}>"
-        elif self.balance > 0:
-            return f"Недостаточно средств для осуществления перевода. Текущий баланс: <{self.balance}>"
-        elif int(self.account) == int(otheraccount) or str(self.account) == str(otheraccount) or str(self.account) == int(otheraccount) or int(self.account) == str(otheraccount):
-            return "Невозможно перевести средстна на один и тот же аккаунт"
+    def transfer_to(self, other_account: 'BankAccount', amount: float):
+        """Фактический перевод денег на другой счет BankAccount"""
+        # 1. Проверка: является ли получатель объектом BankAccount
+        if not isinstance(other_account, BankAccount):
+            return "Ошибка: Получатель должен быть зарегистрированным аккаунтом"
+
+        # 2. Проверка: не пытаемся ли перевести сами себе
+        if self.account == other_account.account:
+            return "Невозможно перевести средства на тот же аккаунт"
+
+        # 3. Проверка суммы
+        if amount <= 0:
+            return "Сумма перевода должна быть положительной"
+
+        # 4. Логика перевода:
+        if self.balance >= amount:
+            self.balance -= amount          # Списываем у себя
+            other_account.balance += amount  # Зачисляем другому
+            return (f"Перевод выполнен успешно!\n"
+                    f"Списано с {self.account}: {amount:.2f}\n"
+                    f"Зачислено на {other_account.account}: {amount:.2f}\n"
+                    f"Ваш текущий баланс: {self.balance:.2f}")
         else:
-            result_withdraw = self.balance - amount
-            self.balance = result_withdraw
-            return f"Осуществлен перевод с аккаунта: {self.account}, на аккаунт: {otheraccount}, на сумму: <{amount}>. Итоговый баланс: {float(self.balance):.2f}"
+            return f"Недостаточно средств для перевода. Текущий баланс: {self.balance:.2f}"
 
     def info(self):
         return f"\nПользователь счета: {self.name}\nНомер счета: {self.account}\nИтоговый баланс: {self.balance}"
@@ -54,6 +65,7 @@ class BankAccount:
 
 acc1 = BankAccount("Boba", "101", 1000)
 acc2 = BankAccount("Bibis", "102", 500)
+
 
 print(acc1.deposit(500))         # Пополнение
 print(acc1.transfer_to('otheraccount', 300))  # Перевод от Boba к Bibis
