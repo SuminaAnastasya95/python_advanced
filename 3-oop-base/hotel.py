@@ -58,7 +58,8 @@ class Booking:
         if room.is_booked:
             cancel_date = date.today()
             room.is_booked = False
-            room.booking_date = None
+            room.date_from = None
+            room.date_to = None
             return f"Отмена бронирования. Номер - {room.number}, в даты - {cancel_date}"
         else:
             return f"Номер {room.number} не был забронирован"
@@ -71,14 +72,16 @@ class Hotel:
         self.room_list: list[Room] = []
 
     def add_room(self, room: Room):
-        return f"Добавлена комната - {self.room_list.append(room)}"
+        self.room_list.append(room)
 
     def get_available_rooms(self, room: Room, start_date: date, end_date: date):
         free_rooms = []
-        if start_date in (room.date_from, room.date_to) or end_date in (room.date_from, room.date_to):
-            return f"Отсутствуют номера в указанные даты: {start_date} - {end_date}"
-        else:
-            free_rooms.append(room)
+        for r in self.room_list:
+            if not room.is_booked:
+                free_rooms.append(room)
+            elif not (start_date < room.date_to and end_date > room.date_from):
+                free_rooms.append(room)
+        return free_rooms
 
     def get_list_rooms(self):
         return self.room_list
